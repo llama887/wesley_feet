@@ -43,13 +43,13 @@
     <Image Include="mahiru.png">
       <Filter>Source Files</Filter>
     </Image>
-    <Image Include="sleeping.jpg">
-      <Filter>Source Files</Filter>
-    </Image>
-    <Image Include="sleepy.jpg">
-      <Filter>Source Files</Filter>
-    </Image>
     <Image Include="face.jpg">
+      <Filter>Source Files</Filter>
+    </Image>
+    <Image Include="font1.png">
+      <Filter>Source Files</Filter>
+    </Image>
+    <Image Include="george_0.png">
       <Filter>Source Files</Filter>
     </Image>
   </ItemGroup>

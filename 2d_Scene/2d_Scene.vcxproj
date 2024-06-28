@@ -147,10 +147,10 @@
     <Image Include="depressed.jpg" />
     <Image Include="face.jpg" />
     <Image Include="feet.jpg" />
+    <Image Include="font1.png" />
+    <Image Include="george_0.png" />
     <Image Include="kano.png" />
     <Image Include="mahiru.png" />
-    <Image Include="sleeping.jpg" />
-    <Image Include="sleepy.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
