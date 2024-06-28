@@ -1,4 +1,4 @@
-#define LOG(argument) std::cout << argument << '\n'
+ï»¿#define LOG(argument) std::cout << argument << '\n'
 #define STB_IMAGE_IMPLEMENTATION
 #define GL_SILENCE_DEPRECATION
 
@@ -93,20 +93,30 @@ float previous_ticks = 0.0f;
 
 glm::vec3 g_george_position = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 g_george_movement = glm::vec3(static_cast <float> (rand()) / static_cast <float> (RAND_MAX),
-                                        static_cast <float> (rand()) / static_cast <float> (RAND_MAX) - 0.5f, 0.0f);
+    static_cast <float> (rand()) / static_cast <float> (RAND_MAX) - 0.5f, 0.0f);
 
-GLuint g_kano_texture_id, g_mahiru_texture_id;
+GLuint g_kano_texture_id, g_mahiru_texture_id, g_face1_texture_id, g_face2_texture_id;
 constexpr char KANO_SPRITE_FILEPATH[] = "kano.png";
 constexpr char MAHIRU_SPRITE_FILEPATH[] = "mahiru.png";
-glm::mat4 g_kano_matrix, g_mahiru_matrix;
-constexpr glm::vec3 ANIME_SCALE = glm::vec3(2.0f/2, 4.2104f/2, 0.0f);
+glm::mat4 g_kano_matrix, g_mahiru_matrix, g_face1_matrix, g_face2_matrix;
+constexpr glm::vec3 ANIME_SCALE = glm::vec3(2.0f / 2, 4.2104f / 2, 0.0f);
 glm::vec3 g_kano_position = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 g_kano_movement = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 g_mahiru_position = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 g_mahiru_movement = glm::vec3(0.0f, 0.0f, 0.0f);
+constexpr char WESLEY_FILE_PATH[] = "face.jpg";
+glm::vec3 face_scale = glm::vec3(1.0f, 856.0f / 1093.0f, 0.0f);
+glm::vec3 g_face1_position = glm::vec3(0.0f, 0.0f, 0.0f);
+glm::vec3 g_face1_movement = glm::vec3(-static_cast <float> (rand()) / static_cast <float> (RAND_MAX),
+    static_cast <float> (rand()) / static_cast <float> (RAND_MAX) - 0.5f, 0.0f);
+glm::vec3 g_face2_position = glm::vec3(0.0f, 0.0f, 0.0f);
+glm::vec3 g_face2_movement = glm::vec3(2*(static_cast <float> (rand()) / static_cast <float> (RAND_MAX) - 0.5),
+    static_cast <float> (rand()) / static_cast <float> (RAND_MAX) - 0.5f, 0.0f);
+
 float anime_speed = 5.0f;
 bool is_player_controlled = true;
 bool game_finished = false;
+int balls = 1;
 
 void initialise();
 void process_input();
@@ -168,7 +178,7 @@ void draw_text(ShaderProgram* shader_program, GLuint font_texture_id, std::strin
     float width = 1.0f / FONTBANK_SIZE;
     float height = 1.0f / FONTBANK_SIZE;
 
-    // Instead of having a single pair of arrays, we'll have a series of pairs—one for
+    // Instead of having a single pair of arrays, we'll have a series of pairsï¿½one for
     // each character. Don't forget to include <vector>!
     std::vector<float> vertices;
     std::vector<float> texture_coordinates;
@@ -286,6 +296,8 @@ void initialise()
     g_george_matrix = glm::mat4(1.0f);
     g_kano_matrix = glm::mat4(1.0f);
     g_mahiru_matrix = glm::mat4(1.0f);
+    g_face1_matrix = glm::mat4(1.0f);
+    g_face2_matrix = glm::mat4(1.0f);
     g_view_matrix = glm::mat4(1.0f);
     g_projection_matrix = glm::ortho(-5.0f, 5.0f, -3.75f, 3.75f, -1.0f, 1.0f);
 
@@ -300,6 +312,8 @@ void initialise()
     g_kano_texture_id = load_texture(KANO_SPRITE_FILEPATH);
     g_mahiru_texture_id = load_texture(MAHIRU_SPRITE_FILEPATH);
     g_font_texture_id = load_texture(FONTSHEET_FILEPATH);
+    g_face1_texture_id = load_texture(WESLEY_FILE_PATH);
+    g_face2_texture_id = load_texture(WESLEY_FILE_PATH);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -325,6 +339,15 @@ void process_input()
             switch (event.key.keysym.sym) {
             case SDLK_t:
                 is_player_controlled = !is_player_controlled;
+                break;
+            case SDLK_1:
+                balls = 1;
+                break;
+            case SDLK_2:
+                balls = 2;
+                break;
+            case SDLK_3:
+                balls = 3;
                 break;
             default:
                 break;
@@ -395,14 +418,14 @@ void update()
     float top = 3.5f;
     g_kano_position.x = 4.5f;
     g_mahiru_position.x = -g_kano_position.x;
-    
-    if (((g_mahiru_position.y + ANIME_SCALE.y/2) >= top && g_mahiru_movement.y > 0)
+
+    if (((g_mahiru_position.y + ANIME_SCALE.y / 2) >= top && g_mahiru_movement.y > 0)
         || ((g_mahiru_position.y - ANIME_SCALE.y / 2) <= -top && g_mahiru_movement.y < 0)) {
         g_mahiru_movement.y = 0;
     }
     if (!is_player_controlled) {
-		g_kano_movement.y = sin(ticks);
-	}
+        g_kano_movement.y = sin(ticks);
+    }
     if ((g_kano_position.y + ANIME_SCALE.y / 2 > top && g_kano_movement.y > 0)
         || (g_kano_position.y - ANIME_SCALE.y / 2 < -top && g_kano_movement.y < 0)) {
         g_kano_movement.y = 0;
@@ -424,9 +447,9 @@ void update()
             }
         }
         else if (g_george_position.x < g_mahiru_position.x + ANIME_SCALE.x / 2 &&
-                  g_george_position.y >= g_mahiru_position.y - ANIME_SCALE.y / 2 &&
-                  g_george_position.y <= g_mahiru_position.y + ANIME_SCALE.y / 2 &&
-                  g_george_movement.x < 0) {
+            g_george_position.y >= g_mahiru_position.y - ANIME_SCALE.y / 2 &&
+            g_george_position.y <= g_mahiru_position.y + ANIME_SCALE.y / 2 &&
+            g_george_movement.x < 0) {
             g_george_movement.x = -g_george_movement.x + sin(rand()) / damping / damping;
             g_george_movement.y += g_mahiru_movement.y / damping + sin(rand()) / damping / damping;
             if (mahiru_turn) {
@@ -435,8 +458,8 @@ void update()
             }
         }
         if (g_george_movement.x > 0 && g_george_movement.x < 1) {
-			g_george_movement.x = 1;
-		}
+            g_george_movement.x = 1;
+        }
         else if (g_george_movement.x < 0 && g_george_movement.x > -1) {
             g_george_movement.x = -1;
         }
@@ -445,13 +468,13 @@ void update()
         game_finished = true;
         return;
     }
-    
+
     if (g_george_movement.x > 0) {
-		g_animation_indices = g_george_walking[RIGHT];
-	}
-	else if (g_george_movement.x < 0) {
-		g_animation_indices = g_george_walking[LEFT];
-	}
+        g_animation_indices = g_george_walking[RIGHT];
+    }
+    else if (g_george_movement.x < 0) {
+        g_animation_indices = g_george_walking[LEFT];
+    }
     g_george_position += g_george_movement * g_player_speed * delta_time;
     g_kano_position += g_kano_movement * g_player_speed * delta_time;
     g_mahiru_position += g_mahiru_movement * g_player_speed * delta_time;
@@ -499,7 +522,11 @@ void render()
     glEnableVertexAttribArray(g_shader_program.get_tex_coordinate_attribute());
     draw_object(g_kano_matrix, g_kano_texture_id);
     draw_object(g_mahiru_matrix, g_mahiru_texture_id);
-
+    if (balls > 1) {
+		draw_object(g_face1_matrix, g_face1_texture_id);
+    } if (balls > 2) {
+        draw_object(g_face2_matrix, g_face2_texture_id);
+    }
     g_shader_program.set_model_matrix(g_george_matrix);
     draw_sprite_from_texture_atlas(&g_shader_program, g_george_texture_id,
         g_animation_indices[g_animation_index],
@@ -508,14 +535,22 @@ void render()
         draw_text(&g_shader_program, g_font_texture_id, "Game Finished", 0.5f, 0.05f,
             glm::vec3(-3.0f, 2.0f, 0.0f));
         if (mahiru_score > kano_score) {
-
+            draw_text(&g_shader_program, g_font_texture_id, "Mahiru Won", 0.5f, 0.05f,
+                glm::vec3(-2.5f, 1.5f, 0.0f));
+        } else if (kano_score > mahiru_score) {
+			draw_text(&g_shader_program, g_font_texture_id, "Kano Won", 0.5f, 0.05f,
+				glm::vec3(-2.0f, 1.5f, 0.0f));
+        }
+        else {
+            draw_text(&g_shader_program, g_font_texture_id, "Draw", 0.5f, 0.05f,
+                glm::vec3(-1.0f, 1.5f, 0.0f));
         }
     }
     else {
         draw_text(&g_shader_program, g_font_texture_id, "Kano: " + std::to_string(kano_score), 0.5f, 0.05f,
-			glm::vec3(-3.0f, 2.0f, 0.0f));
-		draw_text(&g_shader_program, g_font_texture_id, "Mahiru: " + std::to_string(mahiru_score), 0.5f, 0.05f,
-			glm::vec3(-3.0f, 1.5f, 0.0f));
+            glm::vec3(-3.0f, 2.0f, 0.0f));
+        draw_text(&g_shader_program, g_font_texture_id, "Mahiru: " + std::to_string(mahiru_score), 0.5f, 0.05f,
+            glm::vec3(-3.0f, 1.5f, 0.0f));
     }
 
     SDL_GL_SwapWindow(g_display_window);

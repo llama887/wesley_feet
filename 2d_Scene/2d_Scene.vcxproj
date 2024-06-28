@@ -146,6 +146,7 @@
   <ItemGroup>
     <Image Include="depressed.jpg" />
     <Image Include="face.jpg" />
+    <Image Include="faceCopy.jpg" />
     <Image Include="feet.jpg" />
     <Image Include="font1.png" />
     <Image Include="george_0.png" />
