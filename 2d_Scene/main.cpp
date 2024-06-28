@@ -66,7 +66,7 @@ int g_george_walking[SPRITESHEET_DIMENSIONS][SPRITESHEET_DIMENSIONS] =
 GLuint g_george_texture_id;
 GLuint g_font_texture_id;
 
-float g_player_speed = 3.0f;  // move 1 unit per second
+float g_ball_speed = 2.0f;  // move 1 unit per second
 
 int* g_animation_indices = g_george_walking[RIGHT];
 int g_animation_frames = SPRITESHEET_DIMENSIONS;
@@ -105,7 +105,7 @@ glm::vec3 g_kano_movement = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 g_mahiru_position = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 g_mahiru_movement = glm::vec3(0.0f, 0.0f, 0.0f);
 constexpr char WESLEY_FILE_PATH[] = "face.jpg";
-glm::vec3 face_scale = glm::vec3(1.0f, 856.0f / 1093.0f, 0.0f);
+glm::vec3 face_scale = glm::vec3(1.0f * 0.5, 856.0f / 1093.0f * 0.5, 0.0f);
 glm::vec3 g_face1_position = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 g_face1_movement = glm::vec3(-static_cast <float> (rand()) / static_cast <float> (RAND_MAX),
     static_cast <float> (rand()) / static_cast <float> (RAND_MAX) - 0.5f, 0.0f);
@@ -389,7 +389,9 @@ void process_input()
 
 int mahiru_score = 0;
 int kano_score = 0;
-bool mahiru_turn = false;
+bool mahiru_turn_george = false;
+bool mahiru_turn_face1 = false;
+bool mahiru_turn_face2 = false;
 
 void update()
 {
@@ -434,6 +436,14 @@ void update()
         || (g_george_position.y < -top && g_george_movement.y < 0)) {
         g_george_movement.y = -g_george_movement.y;
     }
+    if (balls > 1 && (g_face1_position.y > top && g_face1_movement.y > 0)
+        || (g_face1_position.y < -top && g_face1_movement.y < 0)) {
+        g_face1_movement.y = -g_face1_movement.y;
+    }
+    if (balls > 2 && (g_face2_position.y > top && g_face2_movement.y > 0)
+        || (g_face2_position.y < -top && g_face2_movement.y < 0)) {
+        g_face2_movement.y = -g_face2_movement.y;
+    }
     if (!game_finished && g_george_position.x < g_kano_position.x && g_george_position.x > g_mahiru_position.x) {
         if (g_george_position.x > g_kano_position.x - ANIME_SCALE.x / 2 &&
             g_george_position.y >= g_kano_position.y - ANIME_SCALE.y / 2 &&
@@ -441,9 +451,9 @@ void update()
             g_george_movement.x > 0) {
             g_george_movement.x = -g_george_movement.x + sin(rand()) / damping / damping;
             g_george_movement.y += g_kano_movement.y / damping + sin(rand()) / damping / damping;
-            if (!mahiru_turn) {
+            if (!mahiru_turn_george) {
                 kano_score++;
-                mahiru_turn = true;
+                mahiru_turn_george = true;
             }
         }
         else if (g_george_position.x < g_mahiru_position.x + ANIME_SCALE.x / 2 &&
@@ -452,9 +462,9 @@ void update()
             g_george_movement.x < 0) {
             g_george_movement.x = -g_george_movement.x + sin(rand()) / damping / damping;
             g_george_movement.y += g_mahiru_movement.y / damping + sin(rand()) / damping / damping;
-            if (mahiru_turn) {
+            if (mahiru_turn_george) {
                 mahiru_score++;
-                mahiru_turn = false;
+                mahiru_turn_george = false;
             }
         }
         if (g_george_movement.x > 0 && g_george_movement.x < 1) {
@@ -468,6 +478,78 @@ void update()
         game_finished = true;
         return;
     }
+    if (balls > 1) {
+        if (!game_finished && g_face1_position.x < g_kano_position.x && g_face1_position.x > g_mahiru_position.x) {
+            if (g_face1_position.x > g_kano_position.x - ANIME_SCALE.x / 2 &&
+                g_face1_position.y >= g_kano_position.y - ANIME_SCALE.y / 2 &&
+                g_face1_position.y <= g_kano_position.y + ANIME_SCALE.y / 2 &&
+                g_face1_movement.x > 0) {
+                g_face1_movement.x = -g_face1_movement.x + sin(rand()) / damping / damping;
+                g_face1_movement.y += g_kano_movement.y / damping + sin(rand()) / damping / damping;
+                if (!mahiru_turn_face1) {
+                    kano_score++;
+                    mahiru_turn_face1 = true;
+                }
+            }
+            else if (g_face1_position.x < g_mahiru_position.x + ANIME_SCALE.x / 2 &&
+                g_face1_position.y >= g_mahiru_position.y - ANIME_SCALE.y / 2 &&
+                g_face1_position.y <= g_mahiru_position.y + ANIME_SCALE.y / 2 &&
+                g_face1_movement.x < 0) {
+                g_face1_movement.x = -g_face1_movement.x + sin(rand()) / damping / damping;
+                g_face1_movement.y += g_mahiru_movement.y / damping + sin(rand()) / damping / damping;
+                if (mahiru_turn_face1) {
+                    mahiru_score++;
+                    mahiru_turn_face1 = false;
+                }
+            }
+            if (g_face1_movement.x > 0 && g_face1_movement.x < 1) {
+                g_face1_movement.x = 1;
+            }
+            else if (g_face1_movement.x < 0 && g_face1_movement.x > -1) {
+                g_face1_movement.x = -1;
+            }
+        }
+        else {
+            game_finished = true;
+            return;
+        }
+    }
+    if (balls > 2) {
+        if (!game_finished && g_face2_position.x < g_kano_position.x && g_face2_position.x > g_mahiru_position.x) {
+            if (g_face2_position.x > g_kano_position.x - ANIME_SCALE.x / 2 &&
+                g_face2_position.y >= g_kano_position.y - ANIME_SCALE.y / 2 &&
+                g_face2_position.y <= g_kano_position.y + ANIME_SCALE.y / 2 &&
+                g_face2_movement.x > 0) {
+                g_face2_movement.x = -g_face2_movement.x + sin(rand()) / damping / damping;
+                g_face2_movement.y += g_kano_movement.y / damping + sin(rand()) / damping / damping;
+                if (!mahiru_turn_face2) {
+                    kano_score++;
+                    mahiru_turn_face2 = true;
+                }
+            }
+            else if (g_face2_position.x < g_mahiru_position.x + ANIME_SCALE.x / 2 &&
+                g_face2_position.y >= g_mahiru_position.y - ANIME_SCALE.y / 2 &&
+                g_face2_position.y <= g_mahiru_position.y + ANIME_SCALE.y / 2 &&
+                g_face2_movement.x < 0) {
+                g_face2_movement.x = -g_face2_movement.x + sin(rand()) / damping / damping;
+                g_face2_movement.y += g_mahiru_movement.y / damping + sin(rand()) / damping / damping;
+                if (mahiru_turn_face2) {
+                    mahiru_score++;
+                    mahiru_turn_face2 = false;
+                }
+            }
+            if (g_face2_movement.x > 0 && g_face2_movement.x < 1) {
+                g_face2_movement.x = 1;
+            }
+            else if (g_face2_movement.x < 0 && g_face2_movement.x > -1) {
+                g_face2_movement.x = -1;
+            }
+        }
+        else {
+            game_finished = true;
+            return;
+        }
+    }
 
     if (g_george_movement.x > 0) {
         g_animation_indices = g_george_walking[RIGHT];
@@ -475,9 +557,14 @@ void update()
     else if (g_george_movement.x < 0) {
         g_animation_indices = g_george_walking[LEFT];
     }
-    g_george_position += g_george_movement * g_player_speed * delta_time;
-    g_kano_position += g_kano_movement * g_player_speed * delta_time;
-    g_mahiru_position += g_mahiru_movement * g_player_speed * delta_time;
+    g_george_position += g_george_movement * g_ball_speed * delta_time;
+    if (balls > 1) {
+        g_face1_position += g_face1_movement * g_ball_speed * delta_time;
+    } if (balls > 2) {
+		g_face2_position += g_face2_movement * g_ball_speed * delta_time;
+	}
+    g_kano_position += g_kano_movement * anime_speed * delta_time;
+    g_mahiru_position += g_mahiru_movement * anime_speed * delta_time;
     /* TRANSFORMATIONS */
     g_george_matrix = glm::mat4(1.0f);
     g_george_matrix = glm::translate(g_george_matrix, g_george_position);
@@ -487,6 +574,12 @@ void update()
     g_mahiru_matrix = glm::mat4(1.0f);
     g_mahiru_matrix = glm::translate(g_mahiru_matrix, g_mahiru_position);
     g_mahiru_matrix = glm::scale(g_mahiru_matrix, ANIME_SCALE);
+    g_face1_matrix = glm::mat4(1.0f);
+    g_face1_matrix = glm::translate(g_face1_matrix, g_face1_position);
+    g_face1_matrix = glm::scale(g_face1_matrix, face_scale);
+    g_face2_matrix = glm::mat4(1.0f);
+    g_face2_matrix = glm::translate(g_face2_matrix, g_face2_position);
+    g_face2_matrix = glm::scale(g_face2_matrix, face_scale);
 }
 
 

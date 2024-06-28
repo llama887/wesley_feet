@@ -31,12 +31,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="depressed.jpg">
-      <Filter>Source Files</Filter>
-    </Image>
-    <Image Include="feet.jpg">
-      <Filter>Source Files</Filter>
-    </Image>
     <Image Include="kano.png">
       <Filter>Source Files</Filter>
     </Image>
@@ -50,9 +44,6 @@
       <Filter>Source Files</Filter>
     </Image>
     <Image Include="george_0.png">
-      <Filter>Source Files</Filter>
-    </Image>
-    <Image Include="faceCopy.jpg">
       <Filter>Source Files</Filter>
     </Image>
   </ItemGroup>
