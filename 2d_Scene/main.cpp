@@ -352,8 +352,8 @@ void render()
     g_game_state.player->render(&g_shader_program);
 
     for (int i = 0; i < PLATFORM_COUNT; i++) g_game_state.platforms[i].render(&g_shader_program);
-    if (g_game_state.won) draw_text(&g_shader_program, g_font_texture_id, "You won!", 0.5f, 0.05f, glm::vec3(-3.5f, 2.0f, 0.0f));
-    else if (g_game_state.defeated) draw_text(&g_shader_program, g_font_texture_id, "You lost!", 0.5f, 0.05f, glm::vec3(-3.5f, 2.0f, 0.0f));
+    if (g_game_state.won) draw_text(&g_shader_program, g_font_texture_id, "Mission Accomplished!", 0.4f, 0.025f, glm::vec3(-3.5f, 2.0f, 0.0f));
+    else if (g_game_state.defeated) draw_text(&g_shader_program, g_font_texture_id, "Mission Failed!", 0.4f, 0.025f, glm::vec3(-3.5f, 2.0f, 0.0f));
 
     SDL_GL_SwapWindow(g_display_window);
 }
