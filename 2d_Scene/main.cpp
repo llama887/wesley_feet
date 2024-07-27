@@ -220,7 +220,7 @@ void initialise()
     g_game_state.enemies[0].set_acceleration(glm::vec3(0.0f, -9.81f, 0.0f));
 
     g_game_state.enemies[1] = Entity(enemy_texture_id, 0.5f, 1.0f, 1.0f, ENEMY, WALKER, IDLE);
-    g_game_state.enemies[1].set_position(glm::vec3(PLATFORM_OFFSET+2, 5.0f, 0.0f));
+    g_game_state.enemies[1].set_position(glm::vec3(PLATFORM_OFFSET+2.0f, 5.0f, 0.0f));
     g_game_state.enemies[1].set_movement(glm::vec3(0.0f));
     g_game_state.enemies[1].set_acceleration(glm::vec3(0.0f, -9.81f, 0.0f));
 
