@@ -168,6 +168,7 @@ void Entity::draw_sprite_from_texture_atlas(ShaderProgram* program, GLuint textu
     glDisableVertexAttribArray(program->get_tex_coordinate_attribute());
 }
 
+
 bool const Entity::check_collision(Entity* other) const
 {
     if (other->m_is_active == false) return false;
@@ -295,11 +296,15 @@ void Entity::render(ShaderProgram* program)
     if (!m_is_active) return;
     program->set_model_matrix(m_model_matrix);
 
-    if (m_animation_indices != NULL)
+    if (m_animation_indices != NULL && !atacking)
     {
         draw_sprite_from_texture_atlas(program, m_texture_id, m_animation_indices[m_animation_index]);
         return;
-    }
+    } else if (m_animation_indices != NULL && atacking)
+	{
+		draw_sprite_from_texture_atlas(program, m_attack_id, m_animation_indices[m_animation_index]);
+		return;
+	}
 
     float vertices[] = { -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5 };
     float tex_coords[] = { 0.0,  1.0, 1.0,  1.0, 1.0, 0.0,  0.0,  1.0, 1.0, 0.0,  0.0, 0.0 };

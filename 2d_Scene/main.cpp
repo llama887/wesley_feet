@@ -61,7 +61,8 @@ constexpr float MILLISECONDS_IN_SECOND = 1000.0;
 
 constexpr char SPRITESHEET_FILEPATH[] = "assets/christy.jpg",
 PLATFORM_FILEPATH[] = "assets/platform.jpg",
-ENEMY_FILEPATH[] = "assets/mohan.jpg";
+ENEMY_FILEPATH[] = "assets/mohan.jpg",
+ATTACK_FILEPATH[]= "assets/bunny_wes.png";
 
 constexpr char BGM_FILEPATH[] = "assets/crypto.mp3",
 SFX_FILEPATH[] = "assets/bounce.wav";
@@ -205,6 +206,8 @@ void initialise()
         PLAYER
     );
 
+    g_game_state.player->m_attack_id = load_texture(ATTACK_FILEPATH);
+
 
     // Jumping
     g_game_state.player->set_jumping_power(4.0f);
@@ -252,6 +255,7 @@ void initialise()
 void process_input()
 {
     g_game_state.player->set_movement(glm::vec3(0.0f));
+    g_game_state.player->atacking = false;
 
     SDL_Event event;
     while (SDL_PollEvent(&event))
@@ -292,6 +296,8 @@ void process_input()
 
     if (key_state[SDL_SCANCODE_LEFT])       g_game_state.player->move_left();
     else if (key_state[SDL_SCANCODE_RIGHT]) g_game_state.player->move_right();
+    else if (key_state[SDL_SCANCODE_UP] && g_game_state.player->m_is_active)  g_game_state.player->atacking = true;
+	else if (key_state[SDL_SCANCODE_DOWN] && g_game_state.player->m_is_active)  g_game_state.player->atacking = true;
 
     if (glm::length(g_game_state.player->get_movement()) > 1.0f)
         g_game_state.player->normalise_movement();
@@ -324,7 +330,7 @@ void update()
                 g_game_state.platforms,
                 PLATFORM_COUNT);
             if (g_game_state.player->check_collision(&g_game_state.enemies[i])) {
-                if (g_game_state.player->m_is_jumping || g_game_state.player->get_position().y > g_game_state.enemies[i].get_position().y + 1.0f) {
+                if (g_game_state.player->m_is_jumping || g_game_state.player->get_position().y > g_game_state.enemies[i].get_position().y + 1.0f || g_game_state.player->atacking) {
 					enemies_killed++;
                     g_game_state.enemies[i].deactivate();
                 }else

@@ -55,6 +55,8 @@ private:
     bool m_collided_right  = false;
 
 public:
+    GLuint    m_attack_id;
+    bool atacking = false;
     void ai_jump();
     bool m_is_jumping;
     bool m_is_active = true;
