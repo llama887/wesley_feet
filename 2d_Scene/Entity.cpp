@@ -46,9 +46,12 @@ void Entity::ai_walk()
 
 void Entity::ai_jump()
 {
-    m_jumping_power = 2.0f;
-    if (this->get_collided_bottom()) {
-        m_is_jumping = true;
+    if (m_ai_state == JUMPING) {
+        m_jumping_power = 6.0f;
+        if (this->get_collided_bottom()) {
+            jump();
+        }
+
     }
 }
 
@@ -246,8 +249,6 @@ void Entity::update(float delta_time, Entity *player, Entity *collidable_entitie
     m_collided_left   = false;
     m_collided_right  = false;
     
-    if (m_entity_type == ENEMY) ai_activate(player);
-    
     if (m_animation_indices != NULL)
     {
         if (glm::length(m_movement) != 0)
@@ -273,7 +274,7 @@ void Entity::update(float delta_time, Entity *player, Entity *collidable_entitie
     
     m_position.y += m_velocity.y * delta_time;
     check_collision_y(collidable_entities, collidable_entity_count);
-    
+    if (m_entity_type == ENEMY) ai_activate(player);
     
     m_position.x += m_velocity.x * delta_time;
     check_collision_x(collidable_entities, collidable_entity_count);
