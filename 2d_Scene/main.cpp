@@ -217,7 +217,7 @@ void initialise()
 
     g_game_state.enemies = new Entity[ENEMY_COUNT];
     
-    g_game_state.enemies[0] = Entity(enemy_texture_id, 1.0f, 1.0f, 1.0f, ENEMY, WALKER, IDLE);
+    g_game_state.enemies[0] = Entity(enemy_texture_id, 1.0f, 1.0f, 1.0f, ENEMY, JUMPER, JUMPING);
     g_game_state.enemies[0].set_position(glm::vec3(PLATFORM_OFFSET, 5.0f, 0.0f));
     g_game_state.enemies[0].set_movement(glm::vec3(0.0f));
     g_game_state.enemies[0].set_acceleration(glm::vec3(0.0f, -9.81f, 0.0f));
@@ -428,7 +428,7 @@ void render()
         draw_text(&g_shader_program, g_font_texture_id, "You Lose!", 0.5f, 0.05f,
             glm::vec3(-3.5f, 2.0f, 0.0f));
 	}
-    else if (enemies_killed == ENEMY_COUNT - 1) {
+    else if (enemies_killed == ENEMY_COUNT) {
         		draw_text(&g_shader_program, g_font_texture_id, "You Win!", 0.5f, 0.05f,
 			glm::vec3(-3.5f, 2.0f, 0.0f));
     }
