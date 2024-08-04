@@ -136,14 +136,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Effects.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="helper.cpp" />
+    <ClCompile Include="LevelA.cpp" />
+    <ClCompile Include="LevelB.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Map.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
+    <ClCompile Include="Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Effects.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="LevelA.h" />
+    <ClInclude Include="LevelB.h" />
+    <ClInclude Include="Map.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="stb_image.h" />
+    <ClInclude Include="Utility.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="face.jpg" />
@@ -151,6 +164,12 @@
     <Image Include="george_0.png" />
     <Image Include="kano.png" />
     <Image Include="mahiru.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="glew32.dll" />
+    <None Include="SDL2.dll" />
+    <None Include="SDL2_mixer.dll" />
+    <None Include="smpeg2.dll" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

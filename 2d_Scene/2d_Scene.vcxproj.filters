@@ -24,6 +24,27 @@
     <ClCompile Include="Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelA.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="helper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelB.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ShaderProgram.h">
@@ -33,6 +54,24 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Entity.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelA.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelB.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -52,5 +91,19 @@
     <Image Include="george_0.png">
       <Filter>Source Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="glew32.dll">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="SDL2.dll">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="SDL2_mixer.dll">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="smpeg2.dll">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

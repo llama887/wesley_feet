@@ -1,12 +1,12 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-
+#include "Map.h"
 #include "glm/glm.hpp"
 #include "ShaderProgram.h"
 enum EntityType { PLATFORM, PLAYER, ENEMY  };
-enum AIType     { WALKER, GUARD, JUMPER            };
-enum AIState    { WALKING, IDLE, ATTACKING, JUMPING };
+enum AIType     { WALKER, GUARD            };
+enum AIState    { WALKING, IDLE, ATTACKING };
 
 
 enum AnimationDirection { LEFT, RIGHT, UP, DOWN };
@@ -14,6 +14,7 @@ enum AnimationDirection { LEFT, RIGHT, UP, DOWN };
 class Entity
 {
 private:
+    bool m_is_active = true;
     
     int m_walking[4][4]; // 4x4 array for walking animations
 
@@ -33,6 +34,7 @@ private:
     float     m_speed,
               m_jumping_power;
     
+    bool m_is_jumping;
 
     // ————— TEXTURES ————— //
     GLuint    m_texture_id;
@@ -55,11 +57,6 @@ private:
     bool m_collided_right  = false;
 
 public:
-    GLuint    m_attack_id;
-    bool atacking = false;
-    void ai_jump();
-    bool m_is_jumping;
-    bool m_is_active = true;
     // ————— STATIC VARIABLES ————— //
     static constexpr int SECONDS_PER_FRAME = 4;
 
@@ -78,8 +75,11 @@ public:
     void const check_collision_y(Entity* collidable_entities, int collidable_entity_count);
     void const check_collision_x(Entity* collidable_entities, int collidable_entity_count);
     
+    // Overloading our methods to check for only the map
+    void const check_collision_y(Map *map);
+    void const check_collision_x(Map *map);
     
-    void update(float delta_time, Entity *player, Entity *collidable_entities, int collidable_entity_count);
+    void update(float delta_time, Entity *player, Entity *collidable_entities, int collidable_entity_count, Map *map);
     void render(ShaderProgram* program);
 
     void ai_activate(Entity *player);
@@ -104,6 +104,7 @@ public:
     EntityType const get_entity_type()    const { return m_entity_type;   };
     AIType     const get_ai_type()        const { return m_ai_type;       };
     AIState    const get_ai_state()       const { return m_ai_state;      };
+    float const get_jumping_power() const { return m_jumping_power; }
     glm::vec3 const get_position()     const { return m_position; }
     glm::vec3 const get_velocity()     const { return m_velocity; }
     glm::vec3 const get_acceleration() const { return m_acceleration; }
