@@ -105,7 +105,6 @@ for (int i = 0; i < SECONDS_PER_FRAME; ++i)
     for (int j = 0; j < SECONDS_PER_FRAME; ++j) m_walking[i][j] = 0;
 }
 
-Entity::~Entity() { }
 
 void Entity::draw_sprite_from_texture_atlas(ShaderProgram* program, GLuint texture_id, int index)
 {
@@ -291,6 +290,11 @@ void const Entity::check_collision_x(Map *map)
         m_collided_right = true;
     }
 }
+
+void Entity::acclerate_towards(glm::vec3 target)
+{
+	m_acceleration = glm::normalize(target - m_position);
+}
 void Entity::update(float delta_time, Entity *player, Entity *collidable_entities, int collidable_entity_count, Map *map)
 {
     if (!m_is_active) return;
@@ -322,14 +326,9 @@ void Entity::update(float delta_time, Entity *player, Entity *collidable_entitie
         }
     }
     
-    m_velocity.x = m_movement.x * m_speed;
     m_velocity += m_acceleration * delta_time;
     
-    if (m_is_jumping)
-    {
-        m_is_jumping = false;
-        m_velocity.y += m_jumping_power;
-    }
+
     
     m_position.y += m_velocity.y * delta_time;
     

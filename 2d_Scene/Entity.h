@@ -56,7 +56,10 @@ private:
     bool m_collided_left   = false;
     bool m_collided_right  = false;
 
+    const float max_acceleration = 0.5f;
+
 public:
+    void acclerate_towards(glm::vec3 target);
     // ————— STATIC VARIABLES ————— //
     static constexpr int SECONDS_PER_FRAME = 4;
 
@@ -64,10 +67,169 @@ public:
     Entity();
     Entity(GLuint texture_id, float speed, glm::vec3 acceleration, float jump_power, int walking[4][4], float animation_time,
         int animation_frames, int animation_index, int animation_cols,
-           int animation_rows, float width, float height, EntityType EntityType);
+        int animation_rows, float width, float height, EntityType EntityType);
     Entity(GLuint texture_id, float speed, float width, float height, EntityType EntityType); // Simpler constructor
     Entity(GLuint texture_id, float speed, float width, float height, EntityType EntityType, AIType AIType, AIState AIState); // AI constructor
-    ~Entity();
+    // Copy constructor
+    Entity(const Entity& other)
+        : m_is_active(other.m_is_active),
+        m_entity_type(other.m_entity_type),
+        m_ai_type(other.m_ai_type),
+        m_ai_state(other.m_ai_state),
+        m_movement(other.m_movement),
+        m_position(other.m_position),
+        m_scale(other.m_scale),
+        m_velocity(other.m_velocity),
+        m_acceleration(other.m_acceleration),
+        m_model_matrix(other.m_model_matrix),
+        m_speed(other.m_speed),
+        m_jumping_power(other.m_jumping_power),
+        m_is_jumping(other.m_is_jumping),
+        m_texture_id(other.m_texture_id),
+        m_animation_cols(other.m_animation_cols),
+        m_animation_frames(other.m_animation_frames),
+        m_animation_index(other.m_animation_index),
+        m_animation_rows(other.m_animation_rows),
+        m_animation_time(other.m_animation_time),
+        m_width(other.m_width),
+        m_height(other.m_height),
+        m_collided_top(other.m_collided_top),
+        m_collided_bottom(other.m_collided_bottom),
+        m_collided_left(other.m_collided_left),
+        m_collided_right(other.m_collided_right),
+        max_acceleration(other.max_acceleration)
+    {
+        if (other.m_animation_indices) {
+            m_animation_indices = new int[other.m_animation_frames];
+            std::copy(other.m_animation_indices, other.m_animation_indices + other.m_animation_frames, m_animation_indices);
+        }
+    }
+
+    // Copy assignment operator
+    Entity& operator=(const Entity& other) {
+        if (this == &other) {
+            return *this;
+        }
+
+        m_is_active = other.m_is_active;
+        m_entity_type = other.m_entity_type;
+        m_ai_type = other.m_ai_type;
+        m_ai_state = other.m_ai_state;
+        m_movement = other.m_movement;
+        m_position = other.m_position;
+        m_scale = other.m_scale;
+        m_velocity = other.m_velocity;
+        m_acceleration = other.m_acceleration;
+        m_model_matrix = other.m_model_matrix;
+        m_speed = other.m_speed;
+        m_jumping_power = other.m_jumping_power;
+        m_is_jumping = other.m_is_jumping;
+        m_texture_id = other.m_texture_id;
+        m_animation_cols = other.m_animation_cols;
+        m_animation_frames = other.m_animation_frames;
+        m_animation_index = other.m_animation_index;
+        m_animation_rows = other.m_animation_rows;
+        m_animation_time = other.m_animation_time;
+        m_width = other.m_width;
+        m_height = other.m_height;
+        m_collided_top = other.m_collided_top;
+        m_collided_bottom = other.m_collided_bottom;
+        m_collided_left = other.m_collided_left;
+        m_collided_right = other.m_collided_right;
+
+        if (m_animation_indices) {
+            delete[] m_animation_indices;
+        }
+        if (other.m_animation_indices) {
+            m_animation_indices = new int[other.m_animation_frames];
+            std::copy(other.m_animation_indices, other.m_animation_indices + other.m_animation_frames, m_animation_indices);
+        }
+        else {
+            m_animation_indices = nullptr;
+        }
+        return *this;
+    }
+
+    // Move constructor
+    Entity(Entity&& other) noexcept
+        : m_is_active(std::move(other.m_is_active)),
+        m_entity_type(std::move(other.m_entity_type)),
+        m_ai_type(std::move(other.m_ai_type)),
+        m_ai_state(std::move(other.m_ai_state)),
+        m_movement(std::move(other.m_movement)),
+        m_position(std::move(other.m_position)),
+        m_scale(std::move(other.m_scale)),
+        m_velocity(std::move(other.m_velocity)),
+        m_acceleration(std::move(other.m_acceleration)),
+        m_model_matrix(std::move(other.m_model_matrix)),
+        m_speed(std::move(other.m_speed)),
+        m_jumping_power(std::move(other.m_jumping_power)),
+        m_is_jumping(std::move(other.m_is_jumping)),
+        m_texture_id(std::move(other.m_texture_id)),
+        m_animation_cols(std::move(other.m_animation_cols)),
+        m_animation_frames(std::move(other.m_animation_frames)),
+        m_animation_index(std::move(other.m_animation_index)),
+        m_animation_rows(std::move(other.m_animation_rows)),
+        m_animation_time(std::move(other.m_animation_time)),
+        m_width(std::move(other.m_width)),
+        m_height(std::move(other.m_height)),
+        m_collided_top(std::move(other.m_collided_top)),
+        m_collided_bottom(std::move(other.m_collided_bottom)),
+        m_collided_left(std::move(other.m_collided_left)),
+        m_collided_right(std::move(other.m_collided_right)),
+        max_acceleration(std::move(other.max_acceleration)),
+        m_animation_indices(other.m_animation_indices) // Take ownership of the pointer
+    {
+        other.m_animation_indices = nullptr; // Prevent the moved-from object from deleting the pointer
+    }
+
+    // Move assignment operator
+    Entity& operator=(Entity&& other) noexcept {
+        if (this == &other) {
+            return *this;
+        }
+
+        m_is_active = std::move(other.m_is_active);
+        m_entity_type = std::move(other.m_entity_type);
+        m_ai_type = std::move(other.m_ai_type);
+        m_ai_state = std::move(other.m_ai_state);
+        m_movement = std::move(other.m_movement);
+        m_position = std::move(other.m_position);
+        m_scale = std::move(other.m_scale);
+        m_velocity = std::move(other.m_velocity);
+        m_acceleration = std::move(other.m_acceleration);
+        m_model_matrix = std::move(other.m_model_matrix);
+        m_speed = std::move(other.m_speed);
+        m_jumping_power = std::move(other.m_jumping_power);
+        m_is_jumping = std::move(other.m_is_jumping);
+        m_texture_id = std::move(other.m_texture_id);
+        m_animation_cols = std::move(other.m_animation_cols);
+        m_animation_frames = std::move(other.m_animation_frames);
+        m_animation_index = std::move(other.m_animation_index);
+        m_animation_rows = std::move(other.m_animation_rows);
+        m_animation_time = std::move(other.m_animation_time);
+        m_width = std::move(other.m_width);
+        m_height = std::move(other.m_height);
+        m_collided_top = std::move(other.m_collided_top);
+        m_collided_bottom = std::move(other.m_collided_bottom);
+        m_collided_left = std::move(other.m_collided_left);
+        m_collided_right = std::move(other.m_collided_right);
+
+        if (m_animation_indices) {
+            delete[] m_animation_indices;
+        }
+
+        m_animation_indices = other.m_animation_indices;
+        other.m_animation_indices = nullptr;
+
+        return *this;
+    }
+
+    // Destructor
+    ~Entity() {
+        delete[] m_animation_indices;
+    }
+
 
     void draw_sprite_from_texture_atlas(ShaderProgram* program, GLuint texture_id, int index);
     bool const check_collision(Entity* other) const;
@@ -93,10 +255,14 @@ public:
     void face_up() { m_animation_indices = m_walking[UP]; }
     void face_down() { m_animation_indices = m_walking[DOWN]; }
 
-    void move_left() { m_movement.x = -1.0f; face_left(); }
-    void move_right() { m_movement.x = 1.0f;  face_right(); }
-    void move_up() { m_movement.y = 1.0f;  face_up(); }
-    void move_down() { m_movement.y = -1.0f; face_down(); }
+    void limit_acceleration() { m_acceleration = glm::normalize(m_acceleration) * max_acceleration; };
+    void move_left() {
+        m_acceleration.x = -1.0f; face_left(); limit_acceleration(); }
+    void move_right() {
+        m_acceleration.x = 1.0f;  face_right(); limit_acceleration(); }
+    void move_up() {
+        m_acceleration.y = 1.0f;  face_up(); limit_acceleration(); }
+    void move_down() { m_acceleration.y = -1.0f; face_down(); limit_acceleration(); }
     
     void const jump() { m_is_jumping = true; }
 

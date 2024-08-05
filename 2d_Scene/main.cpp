@@ -45,6 +45,9 @@ constexpr char V_SHADER_PATH[] = "shaders/vertex_lit.glsl",
 
 constexpr float MILLISECONDS_IN_SECOND = 1000.0;
 
+const float ORTHO_WIDTH = 7.5f,
+ORTHO_HEIGHT = 10.0f;
+
 enum AppStatus { RUNNING, TERMINATED };
 // ––––– GLOBAL VARIABLES ––––– //
 
@@ -119,6 +122,23 @@ void initialise()
     g_effects = new Effects(g_projection_matrix, g_view_matrix);
     g_effects->start(SHRINK, 2.0f);
 }
+enum Coordinate { x_coordinate, y_coordinate };
+
+
+
+const Coordinate X_COORDINATE = x_coordinate;
+const Coordinate Y_COORDINATE = y_coordinate;
+
+
+float get_screen_to_ortho(float coordinate, Coordinate axis)
+{
+    switch (axis)
+    {
+    case x_coordinate: return (float)(((coordinate / WINDOW_WIDTH) * ORTHO_WIDTH) - (ORTHO_WIDTH / 2.0));
+    case y_coordinate: return (float)((((WINDOW_HEIGHT - coordinate) / WINDOW_HEIGHT) * ORTHO_HEIGHT) - (ORTHO_HEIGHT / 2.0));
+    default: return 0.0f;
+    }
+}
 
 void process_input()
 {
@@ -154,19 +174,19 @@ void process_input()
                     default:
                         break;
                 }
-                
             default:
                 break;
         }
     }
-    
     const Uint8 *key_state = SDL_GetKeyboardState(NULL);
-
-        if (key_state[SDL_SCANCODE_LEFT])        g_current_scene->get_state().player->move_left();
-            else if (key_state[SDL_SCANCODE_RIGHT])  g_current_scene->get_state().player->move_right();
+    float x_dir = 0;
+    float y_dir = 0;
+        if (key_state[SDL_SCANCODE_LEFT])   x_dir--;
+        if (key_state[SDL_SCANCODE_RIGHT])  x_dir++;
+		if (key_state[SDL_SCANCODE_UP])     y_dir++;
+		if (key_state[SDL_SCANCODE_DOWN])   y_dir--;
              
-        if (glm::length( g_current_scene->get_state().player->get_movement()) > 1.0f)
-            g_current_scene->get_state().player->normalise_movement();
+        g_current_scene->get_state().player->set_acceleration(glm::vec3(x_dir, y_dir, 0.0f));
 }
 
 void update()
