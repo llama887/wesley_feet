@@ -185,7 +185,6 @@ void process_input()
         if (key_state[SDL_SCANCODE_RIGHT])  x_dir++;
 		if (key_state[SDL_SCANCODE_UP])     y_dir++;
 		if (key_state[SDL_SCANCODE_DOWN])   y_dir--;
-             
         g_current_scene->get_state().player->set_acceleration(glm::vec3(x_dir, y_dir, 0.0f));
 }
 
