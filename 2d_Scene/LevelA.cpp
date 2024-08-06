@@ -5,7 +5,7 @@
 #define LEVEL_HEIGHT 8
 
 constexpr char SPRITESHEET_FILEPATH[] = "assets/bunny_wes.png",
-           ENEMY_FILEPATH[]       = "assets/soph.png";
+           ENEMY_FILEPATH[]       = "assets/mohan.jpg";
 
 
 unsigned int LEVELA_DATA[] =
@@ -77,12 +77,14 @@ void LevelA::initialise()
 void LevelA::update(float delta_time)
 {
     m_game_state.player->update(delta_time, m_game_state.player, m_game_state.enemies, ENEMY_COUNT, m_game_state.map);
+    m_game_state.enemies->update(delta_time, m_game_state.player, m_game_state.player, 0.0, m_game_state.map);
     
-    if (m_game_state.player->get_position().y < -10.0f) m_game_state.next_scene_id = 1;
+    // if (m_game_state.player->get_position().y < -10.0f) m_game_state.next_scene_id = 1;
 }
 
 void LevelA::render(ShaderProgram *program)
 {
     m_game_state.map->render(program);
     m_game_state.player->render(program);
+    m_game_state.enemies->render(program);
 }

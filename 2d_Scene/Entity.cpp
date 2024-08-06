@@ -29,8 +29,8 @@ void Entity::ai_activate(Entity *player)
         case ASTEROID:
             m_position.x = rand() % 2 - 1;
             m_position.y = rand() % 2 - 1;
-			m_velocity.x = rand() % 2 - 1;
-            m_velocity.y = rand() % 2 - 1;
+			m_movement.x = rand() % 2 - 1;
+            m_movement.y = rand() % 2 - 1;
 			break;
         default:
             break;
