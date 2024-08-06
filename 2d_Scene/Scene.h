@@ -25,6 +25,10 @@ struct GameState
     Map *map;
     Entity *player;
     Entity *enemies;
+    Entity* left_wall;
+    Entity* right_wall;
+    Entity* top_wall;
+    Entity* bottom_wall;
     
     // ————— AUDIO ————— //
     Mix_Music *bgm;

@@ -61,6 +61,7 @@ private:
     const float asteroid_speed_limiter = 0.2;
     const float asteroid_x_limit = 7.5f / 2;
     const float asteroid_y_limit = 10.0f / 2;
+    const float player_top_speed = 5.0f;
 public:
     void acclerate_towards(glm::vec3 target);
     // ————— STATIC VARIABLES ————— //

@@ -45,7 +45,7 @@ void LevelA::initialise()
         player_texture_id,         // texture id
         5.0f,                      // speed
         1.0f,                      // width
-        1.0f,                       // height
+        1.0f,                      // height
         PLAYER
     );
     // Entity(GLuint texture_id, float speed, float width, float height, EntityType EntityType);
@@ -62,6 +62,16 @@ void LevelA::initialise()
         m_game_state.enemies[i] = Entity(enemy_texture_id, 1.0f, 1.0f, 1.0f, ENEMY, ASTEROID, IDLE);
     }
     m_game_state.enemies[0].set_position(glm::vec3(5.0f, -1.0f, 0.0f));
+
+    /*
+    Screen Edge Colliders
+    */
+
+    m_game_state.left_wall = new Entity();
+    m_game_state.right_wall = new Entity();
+    m_game_state.top_wall = new Entity();
+    m_game_state.bottom_wall = new Entity();
+
     /**
      BGM and SFX
      */
