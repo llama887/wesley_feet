@@ -253,6 +253,7 @@ void shutdown()
 // ––––– DRIVER GAME LOOP ––––– //
 int main(int argc, char* argv[])
 {
+    srand(time(NULL));
     initialise();
     
     while (g_app_status == RUNNING)

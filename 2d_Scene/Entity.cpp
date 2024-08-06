@@ -15,7 +15,7 @@
 #include <cstdlib>  // For rand() and srand()
 #include <ctime>    // For time()
 
-void Entity::ai_activate(Entity *player)
+void Entity::ai_activate(Entity *player = NULL)
 {
     switch (m_ai_type)
     {
@@ -27,16 +27,32 @@ void Entity::ai_activate(Entity *player)
             ai_guard(player);
             break;
         case ASTEROID:
-            m_position.x = rand() % 2 - 1;
-            m_position.y = rand() % 2 - 1;
-			m_movement.x = rand() % 2 - 1;
-            m_movement.y = rand() % 2 - 1;
+            ai_float(player);
 			break;
         default:
             break;
     }
 }
+void Entity::ai_float(Entity* player){
+    
+    glm::vec3 player_delta = m_position - player->get_position();
+    if (player_delta.x > asteroid_x_limit && m_velocity.x > 0.0f) {
+        asteroid_velocity.x = -asteroid_velocity.x;
+	} else if (player_delta.x < -asteroid_x_limit && m_velocity.x < 0.0f) {
+		asteroid_velocity.x = -asteroid_velocity.x;
+	}
+    if (abs(player_delta.y) > asteroid_y_limit && m_velocity.y > 0.0f ) {
+        asteroid_velocity.y = -asteroid_velocity.y;
+    }
 
+    if (glm::length(asteroid_velocity) > 1.0f) {
+        m_velocity = glm::normalize(asteroid_velocity);
+    }else {
+		m_velocity = asteroid_velocity;
+	}
+    m_velocity *= asteroid_speed_limiter;
+
+}
 void Entity::ai_walk()
 {
     m_movement = glm::vec3(-1.0f, 0.0f, 0.0f);
@@ -334,8 +350,6 @@ void Entity::update(float delta_time, Entity *player, Entity *collidable_entitie
     }
     
     m_velocity += m_acceleration * delta_time;
-    
-
     
     m_position.y += m_velocity.y * delta_time;
     

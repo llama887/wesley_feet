@@ -57,7 +57,10 @@ private:
     bool m_collided_right  = false;
 
     const float max_acceleration = 0.5f;
-
+    glm::vec3 asteroid_velocity = glm::vec3(rand() % 2 - 1, rand() % 2 - 1, 0.0f);
+    const float asteroid_speed_limiter = 0.2;
+    const float asteroid_x_limit = 7.5f / 2;
+    const float asteroid_y_limit = 10.0f / 2;
 public:
     void acclerate_towards(glm::vec3 target);
     // ————— STATIC VARIABLES ————— //
@@ -246,6 +249,7 @@ public:
 
     void ai_activate(Entity *player);
     void ai_walk();
+    void ai_float(Entity* player);
     void ai_guard(Entity *player);
     
     void normalise_movement() { m_movement = glm::normalize(m_movement); }
