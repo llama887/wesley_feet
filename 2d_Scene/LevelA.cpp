@@ -4,7 +4,7 @@
 #define LEVEL_WIDTH 14
 #define LEVEL_HEIGHT 8
 
-constexpr char SPRITESHEET_FILEPATH[] = "assets/george_0.png",
+constexpr char SPRITESHEET_FILEPATH[] = "assets/bunny_wes.png",
            ENEMY_FILEPATH[]       = "assets/soph.png";
 
 
@@ -36,18 +36,6 @@ void LevelA::initialise()
     GLuint map_texture_id = Utility::load_texture("assets/tileset.png");
     m_game_state.map = new Map(LEVEL_WIDTH, LEVEL_HEIGHT, LEVELA_DATA, map_texture_id, 1.0f, 4, 1);
     
-    // Code from main.cpp's initialise()
-    /**
-     George's Stuff
-     */
-    // Existing
-    int player_walking_animation[4][4] =
-    {
-        { 1, 5, 9, 13 },  // for George to move to the left,
-        { 3, 7, 11, 15 }, // for George to move to the right,
-        { 2, 6, 10, 14 }, // for George to move upwards,
-        { 0, 4, 8, 12 }   // for George to move downwards
-    };
 
     glm::vec3 acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
     
@@ -63,9 +51,6 @@ void LevelA::initialise()
     // Entity(GLuint texture_id, float speed, float width, float height, EntityType EntityType);
         
     m_game_state.player->set_position(glm::vec3(5.0f, 0.0f, 0.0f));
-
-    // Jumping
-    m_game_state.player->set_jumping_power(3.0f);
     
     /**
     Enemies' stuff */
@@ -73,16 +58,9 @@ void LevelA::initialise()
 
     m_game_state.enemies = new Entity[ENEMY_COUNT];
 
-    for (int i = 0; i < ENEMY_COUNT; i++)
-    {
-    m_game_state.enemies[i] = Entity(enemy_texture_id, 1.0f, 1.0f, 1.0f, ENEMY, GUARD, IDLE);
+    for (int i = 0; i < ENEMY_COUNT; i++){
+        m_game_state.enemies[i] = Entity(enemy_texture_id, 1.0f, 1.0f, 1.0f, ENEMY, ASTEROID, IDLE);
     }
-
-
-    m_game_state.enemies[0].set_position(glm::vec3(8.0f, 0.0f, 0.0f));
-    m_game_state.enemies[0].set_movement(glm::vec3(0.0f));
-    m_game_state.enemies[0].set_acceleration(glm::vec3(0.0f, -9.81f, 0.0f));
-    
     
     /**
      BGM and SFX
