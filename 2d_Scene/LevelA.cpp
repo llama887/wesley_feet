@@ -56,18 +56,11 @@ void LevelA::initialise()
     m_game_state.player = new Entity(
         player_texture_id,         // texture id
         5.0f,                      // speed
-        acceleration,              // acceleration
-        5.0f,                      // jumping power
-        player_walking_animation,  // animation index sets
-        0.0f,                      // animation time
-        4,                         // animation frame amount
-        0,                         // current animation index
-        4,                         // animation column amount
-        4,                         // animation row amount
         1.0f,                      // width
         1.0f,                       // height
         PLAYER
     );
+    // Entity(GLuint texture_id, float speed, float width, float height, EntityType EntityType);
         
     m_game_state.player->set_position(glm::vec3(5.0f, 0.0f, 0.0f));
 

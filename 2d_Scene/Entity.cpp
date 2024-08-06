@@ -12,6 +12,8 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
 #include "Entity.h"
+#include <cstdlib>  // For rand() and srand()
+#include <ctime>    // For time()
 
 void Entity::ai_activate(Entity *player)
 {
@@ -24,7 +26,10 @@ void Entity::ai_activate(Entity *player)
         case GUARD:
             ai_guard(player);
             break;
-            
+        case ASTEROID:
+			m_velocity.x = rand() % 2 - 1;
+            m_velocity.y = rand() % 2 - 1;
+			break;
         default:
             break;
     }
