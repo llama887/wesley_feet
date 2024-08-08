@@ -62,7 +62,10 @@ private:
     const float asteroid_x_limit = 7.5f / 2;
     const float asteroid_y_limit = 10.0f / 2;
     const float player_top_speed = 5.0f;
+    
+    glm::vec3 wall_position;
 public:
+    void set_wall_position(glm::vec3 wall_position) { wall_position = wall_position; }
     void acclerate_towards(glm::vec3 target);
     // ————— STATIC VARIABLES ————— //
     static constexpr int SECONDS_PER_FRAME = 4;
@@ -287,6 +290,7 @@ public:
     bool      const get_collided_bottom() const { return m_collided_bottom; }
     bool      const get_collided_right() const { return m_collided_right; }
     bool      const get_collided_left() const { return m_collided_left; }
+    glm::mat4 const get_model_matrix() const { return m_model_matrix; }
     
     void activate()   { m_is_active = true;  };
     void deactivate() { m_is_active = false; };

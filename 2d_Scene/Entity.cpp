@@ -309,7 +309,12 @@ void Entity::acclerate_towards(glm::vec3 target)
 void Entity::update(float delta_time, Entity *player, Entity *collidable_entities, int collidable_entity_count, Map *map)
 {
     if (!m_is_active) return;
- 
+    if (m_entity_type == WALL) {
+        m_model_matrix = glm::mat4(1.0f);
+        m_model_matrix = glm::translate(m_model_matrix, player->get_position() + wall_position);
+        m_model_matrix = glm::scale(m_model_matrix, glm::vec3(m_width, m_height, 1.0f));
+        return;
+    }
     m_collided_top    = false;
     m_collided_bottom = false;
     m_collided_left   = false;
@@ -350,10 +355,6 @@ void Entity::update(float delta_time, Entity *player, Entity *collidable_entitie
     
     m_model_matrix = glm::mat4(1.0f);
     m_model_matrix = glm::translate(m_model_matrix, m_position);
-
-    if (m_entity_type == WALL) {
-        m_model_matrix = glm::scale(m_model_matrix, glm::vec3(m_width, m_height, 1.0f));
-    }
 }
 
 
