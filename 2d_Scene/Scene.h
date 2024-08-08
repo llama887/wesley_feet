@@ -29,6 +29,7 @@ struct GameState
     Entity* right_wall;
     Entity* top_wall;
     Entity* bottom_wall;
+    Entity* walls;
     
     // ————— AUDIO ————— //
     Mix_Music *bgm;

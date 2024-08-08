@@ -63,7 +63,11 @@ void LevelA::initialise()
     m_game_state.top_wall->update(0.0f, m_game_state.player, m_game_state.player, 0.0, m_game_state.map);
     m_game_state.right_wall->update(0.0f, m_game_state.player, m_game_state.player, 0.0, m_game_state.map);
     m_game_state.bottom_wall->update(0.0f, m_game_state.player, m_game_state.player, 0.0, m_game_state.map);
-    
+    m_game_state.walls = new Entity[4];
+    m_game_state.walls[0] = *m_game_state.left_wall;
+    m_game_state.walls[1] = *m_game_state.top_wall;
+    m_game_state.walls[2] = *m_game_state.right_wall;
+    m_game_state.walls[3] = *m_game_state.bottom_wall;
     /**
     Enemies' stuff */
     GLuint enemy_texture_id = Utility::load_texture(ENEMY_FILEPATH);
@@ -94,7 +98,7 @@ void LevelA::initialise()
 void LevelA::update(float delta_time)
 {
     m_game_state.player->update(delta_time, m_game_state.player, m_game_state.enemies, ENEMY_COUNT, m_game_state.map);
-    m_game_state.enemies->update(delta_time, m_game_state.player, m_game_state.player, 0.0, m_game_state.map);
+    m_game_state.enemies->update(delta_time, m_game_state.player, m_game_state.walls, 4, m_game_state.map);
     /*
     m_game_state.left_wall->update(delta_time, m_game_state.player, m_game_state.player, 0.0, m_game_state.map);
     m_game_state.top_wall->update(delta_time, m_game_state.player, m_game_state.player, 0.0, m_game_state.map);
