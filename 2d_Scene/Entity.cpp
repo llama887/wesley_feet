@@ -34,24 +34,12 @@ void Entity::ai_activate(Entity *player = NULL)
     }
 }
 void Entity::ai_float(Entity* player){
-    
-    glm::vec3 player_delta = m_position - player->get_position();
-    if (player_delta.x > asteroid_x_limit && m_velocity.x > 0.0f) {
-        asteroid_velocity.x = -asteroid_velocity.x;
-	} else if (player_delta.x < -asteroid_x_limit && m_velocity.x < 0.0f) {
-		asteroid_velocity.x = -asteroid_velocity.x;
-	}
-    if (abs(player_delta.y) > asteroid_y_limit && m_velocity.y > 0.0f ) {
-        asteroid_velocity.y = -asteroid_velocity.y;
-    }
-
     if (glm::length(asteroid_velocity) > 1.0f) {
         m_velocity = glm::normalize(asteroid_velocity);
     }else {
 		m_velocity = asteroid_velocity;
 	}
     m_velocity *= asteroid_speed_limiter;
-
 }
 void Entity::ai_walk()
 {
@@ -354,11 +342,11 @@ void Entity::update(float delta_time, Entity *player, Entity *collidable_entitie
     m_position.y += m_velocity.y * delta_time;
     
     check_collision_y(collidable_entities, collidable_entity_count);
-    check_collision_y(map);
+    //check_collision_y(map);
     
     m_position.x += m_velocity.x * delta_time;
     check_collision_x(collidable_entities, collidable_entity_count);
-    check_collision_x(map);
+    //check_collision_x(map);
     
     m_model_matrix = glm::mat4(1.0f);
     m_model_matrix = glm::translate(m_model_matrix, m_position);
